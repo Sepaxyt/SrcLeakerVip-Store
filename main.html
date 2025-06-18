@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SrcLeakerVip | Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        :root {
+            --primary-bg: #1a1a2e;
+            --secondary-bg: #16213e;
+            --text-color: #ffffff;
+            --accent-color: #00dbde;
+            --accent-color-2: #fc00ff;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .dark-mode {
+            --primary-bg: #121212;
+            --secondary-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --card-bg: rgba(30, 30, 30, 0.8);
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-bg), var(--secondary-bg));
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            z-index: 100;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+        
+        .app-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .dark-mode-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            position: relative;
+            z-index: 101;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100vh;
+            background: var(--primary-bg);
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+            z-index: 99;
+            transition: left 0.3s ease;
+            padding-top: 70px;
+            overflow-y: auto;
+        }
+        
+        .sidebar.open {
+            left: 0;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sidebar-menu li:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-menu li i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        main {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .product-info {
+            padding: 15px;
+        }
+        
+        .product-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .product-price {
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .buy-btn {
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-2));
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .live-chat-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            z-index: 999;
+        }
+        
+        .chat-modal {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            max-height: 500px;
+            background: var(--primary-bg);
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+        }
+        
+        .chat-modal.open {
+            display: flex;
+        }
+        
+        .chat-header {
+            padding: 15px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-2));
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .close-chat {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .chat-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .chat-message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .received {
+            align-self: flex-start;
+            background: var(--card-bg);
+        }
+        
+        .sent {
+            align-self: flex-end;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-2));
+            color: white;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            outline: none;
+        }
+        
+        .send-btn {
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-2));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 98;
+            display: none;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            grid-column: 1 / -1;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #ff6b6b;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo-container">
+            <button class="menu-btn" id="menuBtn">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <img src="https://i.ibb.co/ZkXFkxQ/ic-launcher-foreground.jpg" alt="Logo" class="logo">
+            <span class="app-name">SrcLeakerVip</span>
+        </div>
+        <div class="header-controls">
+            <button class="dark-mode-toggle" id="darkModeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Sidebar Menu -->
+    <div class="sidebar" id="sidebar">
+        <ul class="sidebar-menu">
+            <li id="userProfile">
+                <i class="fas fa-user-circle"></i> User Profile
+            </li>
+            <li id="homePage">
+                <i class="fas fa-home"></i> Home Page
+            </li>
+            <li id="bypassMenu">
+                <i class="fas fa-unlock-alt"></i> Bypass Menu
+            </li>
+            <li id="modApk">
+                <i class="fas fa-download"></i> Mod APK
+            </li>
+            <li id="sourceCode">
+                <i class="fas fa-code"></i> Source Code
+            </li>
+            <li id="loaderSrc">
+                <i class="fas fa-spinner"></i> Loader Src
+            </li>
+            <li id="privateFiles">
+                <i class="fas fa-folder"></i> Private Files
+            </li>
+            <li id="telegramChannel">
+                <i class="fab fa-telegram"></i> Telegram Channel
+            </li>
+            <li id="about">
+                <i class="fas fa-info-circle"></i> About
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Main Content -->
+    <main>
+        <div class="welcome-banner">
+            <h2>Welcome to SrcLeakerVip</h2>
+            <p>Premium BGMI & PUBG Mods and Sources</p>
+        </div>
+        
+        <h3 style="margin-bottom: 15px;">Featured Products</h3>
+        <div class="products-grid" id="productsGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Live Chat Button -->
+    <div class="live-chat-btn" id="liveChatBtn">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+    
+    <!-- Chat Modal -->
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-header">
+            <span>Live Support</span>
+            <button class="close-chat" id="closeChat">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-message received">
+                Hello! How can I help you today?
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="messageInput" placeholder="Type your message...">
+            <button class="send-btn" id="sendMessage">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+    
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-database.js";
+        
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnQlhPz-_ZguPmQ_A1G9tmXAenwYQ9HRk",
+            authDomain: "myweb-ee21f.firebaseapp.com",
+            databaseURL: "https://myweb-ee21f-default-rtdb.firebaseio.com",
+            projectId: "myweb-ee21f",
+            storageBucket: "myweb-ee21f.firebasestorage.app",
+            messagingSenderId: "211270690703",
+            appId: "1:211270690703:web:bbbaf02a51fef5c6e00dfa",
+            measurementId: "G-4V4EYNGRRD"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        
+        // DOM Elements
+        const menuBtn = document.getElementById('menuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const liveChatBtn = document.getElementById('liveChatBtn');
+        const chatModal = document.getElementById('chatModal');
+        const closeChat = document.getElementById('closeChat');
+        const chatBody = document.getElementById('chatBody');
+        const messageInput = document.getElementById('messageInput');
+        const sendMessage = document.getElementById('sendMessage');
+        const productsGrid = document.getElementById('productsGrid');
+        
+        // Telegram Bot Configuration
+        const BOT_TOKEN = '7999492994:AAGaHENFdKapQp1ylMTo8Phtb47tKbhKwGU';
+        const CHAT_ID = '6690653192';
+        
+        // Toggle Sidebar
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        });
+        
+        // Close sidebar when clicking outside
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        // Dark Mode Toggle
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const icon = darkModeToggle.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+        
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.querySelector('i').classList.remove('fa-moon');
+            darkModeToggle.querySelector('i').classList.add('fa-sun');
+        }
+        
+        // Live Chat Toggle
+        liveChatBtn.addEventListener('click', () => {
+            chatModal.classList.toggle('open');
+        });
+        
+        closeChat.addEventListener('click', () => {
+            chatModal.classList.remove('open');
+        });
+        
+        // Send Message to Telegram
+        sendMessage.addEventListener('click', sendMessageToTelegram);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessageToTelegram();
+            }
+        });
+        
+        function sendMessageToTelegram() {
+            const message = messageInput.value.trim();
+            if (message) {
+                // Add message to chat UI
+                addMessageToChat(message, 'sent');
+                messageInput.value = '';
+                
+                // Send to Telegram bot
+                const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+                const data = {
+                    chat_id: CHAT_ID,
+                    text: `New message from SrcLeakerVip user:\n${message}`
+                };
+                
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Message sent to Telegram:', data);
+                })
+                .catch(error => {
+                    console.error('Error sending message:', error);
+                    addMessageToChat('Failed to send message. Please try again later.', 'received');
+                });
+            }
+        }
+        
+        function addMessageToChat(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-message', type);
+            messageDiv.textContent = message;
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        
+        // Load Products from Firebase
+        function loadProducts() {
+            const productsRef = ref(database, 'products');
+            
+            onValue(productsRef, (snapshot) => {
+                const productsData = snapshot.val();
+                productsGrid.innerHTML = '';
+                
+                if (productsData) {
+                    Object.keys(productsData).forEach(key => {
+                        const product = productsData[key];
+                        const productCard = document.createElement('div');
+                        productCard.className = 'product-card';
+                        productCard.innerHTML = `
+                            <img src="${product.imageUrl || 'https://via.placeholder.com/300x150?text=Product+Image'}" 
+                                alt="${product.name}" class="product-image">
+                            <div class="product-info">
+                                <h4 class="product-title">${product.name}</h4>
+                                <p>${product.description || ''}</p>
+                                <div class="product-price">${product.price || '$0.00'}</div>
+                                <a href="${product.buyLink || '#'}" class="buy-btn" target="_blank">Buy Now</a>
+                            </div>
+                        `;
+                        productsGrid.appendChild(productCard);
+                    });
+                } else {
+                    productsGrid.innerHTML = '<p class="error-message">No products available. Check back later!</p>';
+                }
+            }, (error) => {
+                productsGrid.innerHTML = '<p class="error-message">Error loading products. Please refresh the page.</p>';
+                console.error('Error loading products:', error);
+            });
+        }
+        
+        // Initialize
+        loadProducts();
+        
+        // Sidebar menu items functionality
+        document.getElementById('userProfile').addEventListener('click', () => {
+            alert('User profile will be implemented in the next version');
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        document.getElementById('telegramChannel').addEventListener('click', () => {
+            window.open('https://t.me/SrcLeakerVip', '_blank');
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        // Add similar event listeners for other menu items...
+    </script>
+</body>
+</html>
