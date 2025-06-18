@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SrcLeakerVipi | Dashboard</title>
+    <title>SrcLeakerVip | Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -413,8 +413,8 @@
             <li id="userProfile">
                 <i class="fas fa-user-circle"></i> User Profile
             </li>
-            <li id="homePage">
-                <i class="fas fa-home"></i> Home Page
+            <li id="paymentPage">
+                <i class="fas fa-money-bill-wave"></i> Payment
             </li>
             <li id="bypassMenu">
                 <i class="fas fa-unlock-alt"></i> Bypass Menu
@@ -523,12 +523,13 @@
         const productsGrid = document.getElementById('productsGrid');
         
         // Navigation elements
-        const homePage = document.getElementById('homePage');
+        const paymentPage = document.getElementById('paymentPage');
         const bypassMenu = document.getElementById('bypassMenu');
         const modApk = document.getElementById('modApk');
         const sourceCode = document.getElementById('sourceCode');
         const loaderSrc = document.getElementById('loaderSrc');
         const about = document.getElementById('about');
+        const userProfile = document.getElementById('userProfile');
         
         // Telegram Bot Configuration
         const BOT_TOKEN = '7999492994:AAGaHENFdKapQp1ylMTo8Phtb47tKbhKwGU';
@@ -663,8 +664,8 @@
         loadProducts();
         
         // Navigation handlers
-        homePage.addEventListener('click', () => {
-            window.location.href = 'index.html';
+        paymentPage.addEventListener('click', () => {
+            window.location.href = 'payment.html';
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
         });
@@ -699,13 +700,13 @@
             overlay.classList.remove('active');
         });
         
-        // Sidebar menu items functionality
-        document.getElementById('userProfile').addEventListener('click', () => {
-            alert('User profile will be implemented in the next version');
+        userProfile.addEventListener('click', () => {
+            window.location.href = 'userprofile.html';
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
         });
         
+        // Sidebar menu items functionality
         document.getElementById('telegramChannel').addEventListener('click', () => {
             window.open('https://t.me/SrcLeakerVip', '_blank');
             sidebar.classList.remove('open');
