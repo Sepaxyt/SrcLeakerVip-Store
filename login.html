@@ -221,6 +221,36 @@
             font-weight: 500;
             cursor: pointer;
         }
+        
+        /* Remember me checkbox */
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+        
+        .remember-me input {
+            margin-right: 8px;
+            accent-color: #00dbde;
+        }
+        
+        /* Clear saved credentials button */
+        .clear-saved {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            text-decoration: none;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+        
+        .clear-saved:hover {
+            color: #00dbde;
+        }
     </style>
 </head>
 <body>
@@ -246,9 +276,16 @@
                     <div id="passwordError" class="error-message"></div>
                 </div>
                 
+                <div class="remember-me">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">Remember me for 1 day</label>
+                </div>
+                
                 <a href="#" class="forgot-password" id="forgotPassword">Forgot password?</a>
                 
                 <button type="submit" class="login-btn">Login</button>
+                
+                <a href="#" class="clear-saved" id="clearSaved">Clear saved credentials</a>
             </form>
             
             <div class="toggle-form">
@@ -354,6 +391,69 @@
         const signupEmailError = document.getElementById('signupEmailError');
         const signupPasswordError = document.getElementById('signupPasswordError');
         const confirmPasswordError = document.getElementById('confirmPasswordError');
+        const rememberMe = document.getElementById('rememberMe');
+        const clearSaved = document.getElementById('clearSaved');
+
+        // Check for saved credentials on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedCredentials = getSavedCredentials();
+            if (savedCredentials) {
+                emailInput.value = savedCredentials.email;
+                passwordInput.value = savedCredentials.password;
+                rememberMe.checked = true;
+            }
+        });
+
+        // Function to save credentials to cookie
+        function saveCredentials(email, password) {
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + 1); // 1 day expiration
+            
+            const credentials = {
+                email: email,
+                password: password,
+                expires: expirationDate.getTime()
+            };
+            
+            document.cookie = `savedCredentials=${JSON.stringify(credentials)}; expires=${expirationDate.toUTCString()}; path=/; Secure`;
+        }
+
+        // Function to get saved credentials from cookie
+        function getSavedCredentials() {
+            const cookies = document.cookie.split(';');
+            for (const cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'savedCredentials') {
+                    try {
+                        const credentials = JSON.parse(decodeURIComponent(value));
+                        // Check if credentials are still valid
+                        if (credentials.expires > Date.now()) {
+                            return {
+                                email: credentials.email,
+                                password: credentials.password
+                            };
+                        }
+                    } catch (e) {
+                        console.error('Error parsing saved credentials:', e);
+                    }
+                }
+            }
+            return null;
+        }
+
+        // Function to clear saved credentials
+        function clearSavedCredentials() {
+            document.cookie = 'savedCredentials=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            emailInput.value = '';
+            passwordInput.value = '';
+            rememberMe.checked = false;
+        }
+
+        // Clear saved credentials button
+        clearSaved.addEventListener('click', (e) => {
+            e.preventDefault();
+            clearSavedCredentials();
+        });
 
         // Toggle between login and signup forms
         showSignup.addEventListener('click', (e) => {
@@ -390,6 +490,13 @@
                 passwordError.textContent = 'Password is required';
                 passwordError.style.display = 'block';
                 return;
+            }
+            
+            // Save credentials if "Remember me" is checked
+            if (rememberMe.checked) {
+                saveCredentials(email, password);
+            } else {
+                clearSavedCredentials();
             }
             
             // Firebase authentication
@@ -462,6 +569,11 @@
                     // Signed up successfully
                     const user = userCredential.user;
                     console.log('User created:', user);
+                    
+                    // Save credentials if "Remember me" is checked
+                    if (rememberMe.checked) {
+                        saveCredentials(email, password);
+                    }
                     
                     // Redirect to main page after successful signup
                     window.location.href = 'main.html';
