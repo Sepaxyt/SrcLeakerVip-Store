@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SrcLeakerVip | Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .login-container {
+            width: 90%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .logo {
+            width: 70%;
+            height: 70%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+        
+        h2 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .input-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #00dbde;
+            box-shadow: 0 0 0 2px rgba(0, 219, 222, 0.2);
+        }
+        
+        .forgot-password {
+            display: block;
+            text-align: right;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            margin-top: -15px;
+            margin-bottom: 20px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .forgot-password:hover {
+            color: #00dbde;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 219, 222, 0.3);
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+        
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .divider::before {
+            margin-right: 10px;
+        }
+        
+        .divider::after {
+            margin-left: 10px;
+        }
+        
+        .google-btn {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .google-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .signup-link {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+        
+        .signup-link a {
+            color: #00dbde;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Modal for password reset */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: #1a1a2e;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .modal-title {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .success-message {
+            color: #00dbde;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-container">
+            <img src="https://i.ibb.co/ZkXFkxQ/ic-launcher-foreground.jpg" alt="SrcLeakerVip Logo" class="logo">
+        </div>
+        <h2>Login to SrcLeakerVip</h2>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required placeholder="Enter your email">
+                <div id="emailError" class="error-message"></div>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required placeholder="Enter your password">
+                <div id="passwordError" class="error-message"></div>
+            </div>
+            
+            <a href="#" class="forgot-password" id="forgotPassword">Forgot password?</a>
+            
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+        
+        <div class="divider">OR</div>
+        
+        <button class="google-btn" id="googleSignIn">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google Logo" class="google-icon">
+            Continue with Google
+        </button>
+        
+        <div class="signup-link">
+            Don't have an account? <a href="#" id="signUpLink">Sign up</a>
+        </div>
+    </div>
+    
+    <!-- Password Reset Modal -->
+    <div class="modal" id="resetModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h3 class="modal-title">Reset Password</h3>
+            <div class="input-group">
+                <label for="resetEmail">Email</label>
+                <input type="email" id="resetEmail" placeholder="Enter your email">
+                <div id="resetError" class="error-message"></div>
+                <div id="resetSuccess" class="success-message"></div>
+            </div>
+            <button class="login-btn" id="resetSubmit">Send Reset Link</button>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK v9 -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            sendPasswordResetEmail,
+            signInWithPopup,
+            GoogleAuthProvider 
+        } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnQlhPz-_ZguPmQ_A1G9tmXAenwYQ9HRk",
+            authDomain: "myweb-ee21f.firebaseapp.com",
+            databaseURL: "https://myweb-ee21f-default-rtdb.firebaseio.com",
+            projectId: "myweb-ee21f",
+            storageBucket: "myweb-ee21f.firebasestorage.app",
+            messagingSenderId: "211270690703",
+            appId: "1:211270690703:web:bbbaf02a51fef5c6e00dfa",
+            measurementId: "G-4V4EYNGRRD"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+        const forgotPassword = document.getElementById('forgotPassword');
+        const resetModal = document.getElementById('resetModal');
+        const closeModal = document.getElementById('closeModal');
+        const resetSubmit = document.getElementById('resetSubmit');
+        const resetEmail = document.getElementById('resetEmail');
+        const resetError = document.getElementById('resetError');
+        const resetSuccess = document.getElementById('resetSuccess');
+        const googleSignIn = document.getElementById('googleSignIn');
+        const signUpLink = document.getElementById('signUpLink');
+
+        // Login with Email/Password
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Reset errors
+            emailError.style.display = 'none';
+            passwordError.style.display = 'none';
+            
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            
+            // Basic validation
+            if (!email) {
+                emailError.textContent = 'Email is required';
+                emailError.style.display = 'block';
+                return;
+            }
+            
+            if (!password) {
+                passwordError.textContent = 'Password is required';
+                passwordError.style.display = 'block';
+                return;
+            }
+            
+            // Firebase authentication
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed in successfully
+                    const user = userCredential.user;
+                    console.log('User logged in:', user);
+                    // Redirect to main page
+                    window.location.href = 'main.html';
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    
+                    if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password') {
+                        passwordError.textContent = 'Invalid email or password';
+                        passwordError.style.display = 'block';
+                    } else if (errorCode === 'auth/too-many-requests') {
+                        passwordError.textContent = 'Account temporarily disabled due to too many failed attempts';
+                        passwordError.style.display = 'block';
+                    } else {
+                        passwordError.textContent = errorMessage;
+                        passwordError.style.display = 'block';
+                    }
+                });
+        });
+        
+        // Forgot Password
+        forgotPassword.addEventListener('click', (e) => {
+            e.preventDefault();
+            resetModal.style.display = 'flex';
+            resetError.style.display = 'none';
+            resetSuccess.style.display = 'none';
+            resetEmail.value = emailInput.value || '';
+        });
+        
+        // Close Modal
+        closeModal.addEventListener('click', () => {
+            resetModal.style.display = 'none';
+        });
+        
+        // Submit Password Reset
+        resetSubmit.addEventListener('click', () => {
+            const email = resetEmail.value;
+            
+            if (!email) {
+                resetError.textContent = 'Email is required';
+                resetError.style.display = 'block';
+                return;
+            }
+            
+            sendPasswordResetEmail(auth, email)
+                .then(() => {
+                    resetSuccess.textContent = 'Password reset email sent. Check your inbox.';
+                    resetSuccess.style.display = 'block';
+                    resetError.style.display = 'none';
+                    
+                    // Hide success message after 5 seconds
+                    setTimeout(() => {
+                        resetSuccess.style.display = 'none';
+                        resetModal.style.display = 'none';
+                    }, 5000);
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    
+                    if (errorCode === 'auth/user-not-found') {
+                        resetError.textContent = 'No user found with this email';
+                    } else {
+                        resetError.textContent = errorMessage;
+                    }
+                    resetError.style.display = 'block';
+                });
+        });
+        
+        // Google Sign-In
+        googleSignIn.addEventListener('click', () => {
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    // This gives you a Google Access Token
+                    const credential = GoogleAuthProvider.credentialFromResult(result);
+                    const token = credential.accessToken;
+                    const user = result.user;
+                    
+                    console.log('Google sign-in successful:', user);
+                    // Redirect to main page
+                    window.location.href = 'main.html';
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    const email = error.email;
+                    const credential = GoogleAuthProvider.credentialFromError(error);
+                    
+                    console.error('Google sign-in error:', error);
+                    passwordError.textContent = errorMessage;
+                    passwordError.style.display = 'block';
+                });
+        });
+        
+        // Sign Up Link
+        signUpLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            // You can redirect to a signup page or show a signup modal
+            alert('Sign up functionality will be implemented in the next version');
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === resetModal) {
+                resetModal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
