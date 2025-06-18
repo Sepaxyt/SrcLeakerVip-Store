@@ -486,6 +486,14 @@
         const sendMessage = document.getElementById('sendMessage');
         const productsGrid = document.getElementById('productsGrid');
         
+        // Navigation elements
+        const homePage = document.getElementById('homePage');
+        const bypassMenu = document.getElementById('bypassMenu');
+        const modApk = document.getElementById('modApk');
+        const sourceCode = document.getElementById('sourceCode');
+        const loaderSrc = document.getElementById('loaderSrc');
+        const about = document.getElementById('about');
+        
         // Telegram Bot Configuration
         const BOT_TOKEN = '7999492994:AAGaHENFdKapQp1ylMTo8Phtb47tKbhKwGU';
         const CHAT_ID = '6690653192';
@@ -618,6 +626,43 @@
         // Initialize
         loadProducts();
         
+        // Navigation handlers
+        homePage.addEventListener('click', () => {
+            window.location.href = 'main.html';
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        bypassMenu.addEventListener('click', () => {
+            window.location.href = 'bypass-menu.html';
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        modApk.addEventListener('click', () => {
+            window.location.href = 'mod-apk.html';
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        sourceCode.addEventListener('click', () => {
+            window.location.href = 'source-code.html';
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        loaderSrc.addEventListener('click', () => {
+            window.location.href = 'loader-src.html';
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        about.addEventListener('click', () => {
+            window.location.href = 'about.html';
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
         // Sidebar menu items functionality
         document.getElementById('userProfile').addEventListener('click', () => {
             alert('User profile will be implemented in the next version');
@@ -630,8 +675,6 @@
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
         });
-        
-        // Add similar event listeners for other menu items...
     </script>
 </body>
 </html>
