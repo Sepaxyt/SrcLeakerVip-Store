@@ -40,7 +40,6 @@
             flex-direction: column;
         }
         
-        /* Header Styles */
         header {
             display: flex;
             justify-content: space-between;
@@ -98,7 +97,6 @@
             z-index: 101;
         }
         
-        /* Sidebar Menu */
         .sidebar {
             position: fixed;
             top: 0;
@@ -139,7 +137,6 @@
             text-align: center;
         }
         
-        /* Main Content */
         main {
             flex: 1;
             padding: 20px;
@@ -147,17 +144,12 @@
             flex-direction: column;
         }
         
-        .section-header {
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+            padding: 20px;
+            border-radius: 10px;
             margin-bottom: 20px;
             text-align: center;
-        }
-        
-        .section-header h2 {
-            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
         }
         
         .products-grid {
@@ -194,15 +186,13 @@
             margin-bottom: 10px;
         }
         
-        .product-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
+        .product-price {
             color: var(--accent-color);
+            font-weight: bold;
+            margin-bottom: 10px;
         }
         
-        .download-btn {
+        .buy-btn {
             background: linear-gradient(90deg, var(--accent-color), var(--accent-color-2));
             color: white;
             border: none;
@@ -211,11 +201,119 @@
             cursor: pointer;
             width: 100%;
             text-align: center;
-            display: block;
             text-decoration: none;
+            display: block;
         }
         
-        /* Overlay */
+        .live-chat-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-color-2));
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            z-index: 999;
+        }
+        
+        .chat-modal {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            max-height: 500px;
+            background: var(--primary-bg);
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+        }
+        
+        .chat-modal.open {
+            display: flex;
+        }
+        
+        .chat-header {
+            padding: 15px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-2));
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .close-chat {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .chat-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .chat-message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .received {
+            align-self: flex-start;
+            background: var(--card-bg);
+        }
+        
+        .sent {
+            align-self: flex-end;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-2));
+            color: white;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            outline: none;
+        }
+        
+        .send-btn {
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-2));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        
         .overlay {
             position: fixed;
             top: 0;
@@ -230,6 +328,54 @@
         .overlay.active {
             display: block;
         }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            grid-column: 1 / -1;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #ff6b6b;
+            padding: 20px;
+        }
+
+        /* Bypass specific styles */
+        .bypass-features {
+            margin-bottom: 20px;
+        }
+
+        .bypass-features h3 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            background: rgba(0, 219, 222, 0.2);
+            padding: 3px 8px;
+            border-radius: 15px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
@@ -237,7 +383,7 @@
     <header>
         <div class="logo-container">
             <button class="menu-btn" id="menuBtn">
-                <i class="fas fa-bars"></i>
+                <i class="fas fa-ellipsis-v"></i>
             </button>
             <img src="https://i.ibb.co/ZkXFkxQ/ic-launcher-foreground.jpg" alt="Logo" class="logo">
             <span class="app-name">SrcLeakerVip</span>
@@ -252,28 +398,31 @@
     <!-- Sidebar Menu -->
     <div class="sidebar" id="sidebar">
         <ul class="sidebar-menu">
-            <li onclick="window.location.href='index.html'">
+            <li id="userProfile">
+                <i class="fas fa-user-circle"></i> User Profile
+            </li>
+            <li id="homePage">
                 <i class="fas fa-home"></i> Home Page
             </li>
-            <li onclick="window.location.href='bypass-menu.html'" class="active">
+            <li id="bypassMenu" class="active">
                 <i class="fas fa-unlock-alt"></i> Bypass Menu
             </li>
-            <li onclick="window.location.href='mod-apk.html'">
+            <li id="modApk">
                 <i class="fas fa-download"></i> Mod APK
             </li>
-            <li onclick="window.location.href='source-code.html'">
+            <li id="sourceCode">
                 <i class="fas fa-code"></i> Source Code
             </li>
-            <li onclick="window.location.href='loader-src.html'">
+            <li id="loaderSrc">
                 <i class="fas fa-spinner"></i> Loader Src
             </li>
-            <li onclick="window.location.href='private-files.html'">
+            <li id="privateFiles">
                 <i class="fas fa-folder"></i> Private Files
             </li>
-            <li onclick="window.open('https://t.me/+sq4mARdqHfY0ZWQ9', '_blank')">
+            <li id="telegramChannel">
                 <i class="fab fa-telegram"></i> Telegram Channel
             </li>
-            <li onclick="window.location.href='about.html'">
+            <li id="about">
                 <i class="fas fa-info-circle"></i> About
             </li>
         </ul>
@@ -284,23 +433,106 @@
     
     <!-- Main Content -->
     <main>
-        <div class="section-header">
-            <h2>Bypass Menu</h2>
-            <p>Collection of bypass tools for various security systems</p>
+        <div class="welcome-banner">
+            <h2>BGMI/PUBG Bypass Tools</h2>
+            <p>Premium anti-ban bypass solutions for all versions</p>
         </div>
         
-        <div class="products-grid" id="productsGrid">
-            <!-- Products will be loaded dynamically -->
+        <div class="page-content">
+            <h1 class="page-title">Bypass Menu</h1>
+            
+            <div class="bypass-features">
+                <h3>Supported Security Systems:</h3>
+                <div>
+                    <span class="feature-tag">Tencent Protection</span>
+                    <span class="feature-tag">Krafton Anti-Cheat</span>
+                    <span class="feature-tag">Memory Checks</span>
+                    <span class="feature-tag">Signature Bypass</span>
+                    <span class="feature-tag">Root Detection</span>
+                    <span class="feature-tag">Emulator Detection</span>
+                </div>
+            </div>
+            
+            <h3 style="margin-bottom: 15px;">Available Bypass Tools</h3>
+            <div class="products-grid" id="productsGrid">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
         </div>
     </main>
     
-    <script>
+    <!-- Live Chat Button -->
+    <div class="live-chat-btn" id="liveChatBtn">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+    
+    <!-- Chat Modal -->
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-header">
+            <span>Live Support</span>
+            <button class="close-chat" id="closeChat">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-message received">
+                Hello! How can I help you with bypass tools today?
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="messageInput" placeholder="Type your message...">
+            <button class="send-btn" id="sendMessage">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+    
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-database.js";
+        
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnQlhPz-_ZguPmQ_A1G9tmXAenwYQ9HRk",
+            authDomain: "myweb-ee21f.firebaseapp.com",
+            databaseURL: "https://myweb-ee21f-default-rtdb.firebaseio.com",
+            projectId: "myweb-ee21f",
+            storageBucket: "myweb-ee21f.firebasestorage.app",
+            messagingSenderId: "211270690703",
+            appId: "1:211270690703:web:bbbaf02a51fef5c6e00dfa",
+            measurementId: "G-4V4EYNGRRD"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        
         // DOM Elements
         const menuBtn = document.getElementById('menuBtn');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
         const darkModeToggle = document.getElementById('darkModeToggle');
+        const liveChatBtn = document.getElementById('liveChatBtn');
+        const chatModal = document.getElementById('chatModal');
+        const closeChat = document.getElementById('closeChat');
+        const chatBody = document.getElementById('chatBody');
+        const messageInput = document.getElementById('messageInput');
+        const sendMessage = document.getElementById('sendMessage');
         const productsGrid = document.getElementById('productsGrid');
+        
+        // Navigation elements
+        const homePage = document.getElementById('homePage');
+        const bypassMenu = document.getElementById('bypassMenu');
+        const modApk = document.getElementById('modApk');
+        const sourceCode = document.getElementById('sourceCode');
+        const loaderSrc = document.getElementById('loaderSrc');
+        const about = document.getElementById('about');
+        
+        // Telegram Bot Configuration
+        const BOT_TOKEN = '7999492994:AAGaHENFdKapQp1ylMTo8Phtb47tKbhKwGU';
+        const CHAT_ID = '6690653192';
         
         // Toggle Sidebar
         menuBtn.addEventListener('click', () => {
@@ -336,41 +568,191 @@
             darkModeToggle.querySelector('i').classList.add('fa-sun');
         }
         
-        // Load Bypass Tools
-        async function loadBypassTools() {
-            try {
-                const response = await fetch('data.json');
-                const data = await response.json();
-                const bypassTools = data.bypass_menu.items;
+        // Live Chat Toggle
+        liveChatBtn.addEventListener('click', () => {
+            chatModal.classList.toggle('open');
+        });
+        
+        closeChat.addEventListener('click', () => {
+            chatModal.classList.remove('open');
+        });
+        
+        // Send Message to Telegram
+        sendMessage.addEventListener('click', sendMessageToTelegram);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessageToTelegram();
+            }
+        });
+        
+        function sendMessageToTelegram() {
+            const message = messageInput.value.trim();
+            if (message) {
+                // Add message to chat UI
+                addMessageToChat(message, 'sent');
+                messageInput.value = '';
                 
+                // Send to Telegram bot
+                const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+                const data = {
+                    chat_id: CHAT_ID,
+                    text: `New message about bypass tools:\n${message}`
+                };
+                
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Message sent to Telegram:', data);
+                })
+                .catch(error => {
+                    console.error('Error sending message:', error);
+                    addMessageToChat('Failed to send message. Please try again later.', 'received');
+                });
+            }
+        }
+        
+        function addMessageToChat(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-message', type);
+            messageDiv.textContent = message;
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        
+        // Load Bypass Tools from Firebase
+        function loadBypassTools() {
+            const bypassRef = ref(database, 'bypass_tools');
+            
+            onValue(bypassRef, (snapshot) => {
+                const toolsData = snapshot.val();
                 productsGrid.innerHTML = '';
                 
-                bypassTools.forEach(tool => {
-                    const toolCard = document.createElement('div');
-                    toolCard.className = 'product-card';
-                    toolCard.innerHTML = `
-                        <img src="${tool.image}" alt="${tool.name}" class="product-image">
-                        <div class="product-info">
-                            <h4 class="product-title">${tool.name}</h4>
-                            <div class="product-meta">
-                                <span>v${tool.version}</span>
-                                <span>${tool.size}</span>
+                if (toolsData) {
+                    Object.keys(toolsData).forEach(key => {
+                        const tool = toolsData[key];
+                        const toolCard = document.createElement('div');
+                        toolCard.className = 'product-card';
+                        toolCard.innerHTML = `
+                            <img src="${tool.imageUrl || 'https://i.ibb.co/0jQ7ZJx/bypass-default.jpg'}" 
+                                alt="${tool.name}" class="product-image">
+                            <div class="product-info">
+                                <h4 class="product-title">${tool.name}</h4>
+                                <div class="bypass-features">
+                                    <div>
+                                        ${tool.features.map(feature => 
+                                            `<span class="feature-tag">${feature}</span>`
+                                        ).join('')}
+                                    </div>
+                                </div>
+                                <div class="product-price">Version: ${tool.version || '1.0'}</div>
+                                <a href="${tool.downloadUrl || '#'}" class="buy-btn" target="_blank">
+                                    Download
+                                </a>
                             </div>
-                            <a href="${tool.download_link}" class="download-btn" target="_blank">
-                                Download
-                            </a>
-                        </div>
-                    `;
-                    productsGrid.appendChild(toolCard);
-                });
-            } catch (error) {
+                        `;
+                        productsGrid.appendChild(toolCard);
+                    });
+                } else {
+                    productsGrid.innerHTML = '<p class="error-message">No bypass tools available. Check back later!</p>';
+                }
+            }, (error) => {
+                productsGrid.innerHTML = '<p class="error-message">Error loading bypass tools. Please refresh the page.</p>';
                 console.error('Error loading bypass tools:', error);
-                productsGrid.innerHTML = '<p>Error loading tools. Please try again later.</p>';
-            }
+            });
         }
         
         // Initialize
         loadBypassTools();
+        
+        // Navigation handlers
+        homePage.addEventListener('click', () => {
+            window.location.href = 'index.html';
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        bypassMenu.addEventListener('click', () => {
+            window.location.href = 'bypass-menu.html';
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        modApk.addEventListener('click', () => {
+            window.location.href = 'mod-apk.html';
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        sourceCode.addEventListener('click', () => {
+            window.location.href = 'source-code.html';
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        loaderSrc.addEventListener('click', () => {
+            window.location.href = 'loader-src.html';
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        about.addEventListener('click', () => {
+            window.location.href = 'about.html';
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        // Sidebar menu items functionality
+        document.getElementById('userProfile').addEventListener('click', () => {
+            alert('User profile will be implemented in the next version');
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        document.getElementById('telegramChannel').addEventListener('click', () => {
+            window.open('https://t.me/SrcLeakerVip', '_blank');
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+
+        // Additional Bypass Functions
+        function checkBypassCompatibility() {
+            // Function to check compatibility with different game versions
+            console.log("Checking bypass compatibility...");
+        }
+
+        function getLatestBypassVersion() {
+            // Function to get latest bypass version
+            console.log("Fetching latest bypass version...");
+            return "2.4.1";
+        }
+
+        function validateBypassSignature() {
+            // Function to validate bypass signature
+            console.log("Validating bypass signature...");
+            return true;
+        }
+
+        function checkRootStatus() {
+            // Function to check root status
+            console.log("Checking root status...");
+            return false;
+        }
+
+        function bypassMemoryChecks() {
+            // Function to bypass memory checks
+            console.log("Bypassing memory checks...");
+        }
+
+        function disableAntiCheat() {
+            // Function to disable anti-cheat temporarily
+            console.log("Disabling anti-cheat systems...");
+        }
     </script>
 </body>
 </html>
