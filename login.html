@@ -251,6 +251,20 @@
         .clear-saved:hover {
             color: #00dbde;
         }
+        
+        /* Password toggle button */
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 40px;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 18px;
+        }
+        
+        .password-toggle:hover {
+            color: #00dbde;
+        }
     </style>
 </head>
 <body>
@@ -273,6 +287,7 @@
                 <div class="input-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" required placeholder="Enter your password">
+                    <span class="password-toggle" id="loginToggle">👁️</span>
                     <div id="passwordError" class="error-message"></div>
                 </div>
                 
@@ -307,12 +322,14 @@
                 <div class="input-group">
                     <label for="signupPassword">Password (min 6 characters)</label>
                     <input type="password" id="signupPassword" required placeholder="Create a password" minlength="6">
+                    <span class="password-toggle" id="signupToggle">👁️</span>
                     <div id="signupPasswordError" class="error-message"></div>
                 </div>
                 
                 <div class="input-group">
                     <label for="confirmPassword">Confirm Password</label>
                     <input type="password" id="confirmPassword" required placeholder="Confirm your password" minlength="6">
+                    <span class="password-toggle" id="confirmToggle">👁️</span>
                     <div id="confirmPasswordError" class="error-message"></div>
                 </div>
                 
@@ -348,7 +365,8 @@
             getAuth, 
             signInWithEmailAndPassword, 
             createUserWithEmailAndPassword,
-            sendPasswordResetEmail
+            sendPasswordResetEmail,
+            onAuthStateChanged
         } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
         
         // Your web app's Firebase configuration
@@ -366,6 +384,14 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+
+        // Check if user is already logged in
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in, redirect to main page
+                window.location.href = 'main.html';
+            }
+        });
 
         // DOM Elements
         const loginForm = document.getElementById('loginForm');
@@ -393,6 +419,32 @@
         const confirmPasswordError = document.getElementById('confirmPasswordError');
         const rememberMe = document.getElementById('rememberMe');
         const clearSaved = document.getElementById('clearSaved');
+        const loginToggle = document.getElementById('loginToggle');
+        const signupToggle = document.getElementById('signupToggle');
+        const confirmToggle = document.getElementById('confirmToggle');
+
+        // Password toggle functionality
+        loginToggle.addEventListener('click', () => {
+            togglePasswordVisibility(passwordInput, loginToggle);
+        });
+
+        signupToggle.addEventListener('click', () => {
+            togglePasswordVisibility(signupPassword, signupToggle);
+        });
+
+        confirmToggle.addEventListener('click', () => {
+            togglePasswordVisibility(confirmPassword, confirmToggle);
+        });
+
+        function togglePasswordVisibility(input, toggle) {
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggle.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                toggle.textContent = '👁️';
+            }
+        }
 
         // Check for saved credentials on page load
         document.addEventListener('DOMContentLoaded', () => {
@@ -624,7 +676,7 @@
             
             sendPasswordResetEmail(auth, email)
                 .then(() => {
-                    resetSuccess.textContent = 'Password reset email sent. Check your inbox.';
+                    resetSuccess.textContent = 'Password reset email sent. Check your inbox (and spam folder).';
                     resetSuccess.style.display = 'block';
                     resetError.style.display = 'none';
                     
