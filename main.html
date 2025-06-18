@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SrcLeakerVip | Dashboard</title>
+    <title>SrcLeakerVipi | Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -356,6 +356,38 @@
             color: #ff6b6b;
             padding: 20px;
         }
+
+        /* Page specific styles */
+        .page-content {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .page-title {
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .feature-list {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        .feature-list li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .feature-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent-color-2);
+        }
     </style>
 </head>
 <body>
@@ -418,10 +450,14 @@
             <p>Premium BGMI & PUBG Mods and Sources</p>
         </div>
         
-        <h3 style="margin-bottom: 15px;">Featured Products</h3>
-        <div class="products-grid" id="productsGrid">
-            <div class="loading">
-                <div class="spinner"></div>
+        <div class="page-content">
+            <h1 class="page-title">Dashboard</h1>
+            
+            <h3 style="margin-bottom: 15px;">Featured Products</h3>
+            <div class="products-grid" id="productsGrid">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
             </div>
         </div>
     </main>
@@ -628,7 +664,7 @@
         
         // Navigation handlers
         homePage.addEventListener('click', () => {
-            window.location.href = 'main.html';
+            window.location.href = 'index.html';
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
         });
