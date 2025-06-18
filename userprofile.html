@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SrcLeakerVip | User Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-bg: #1a1a2e;
+            --secondary-bg: #16213e;
+            --text-color: #ffffff;
+            --accent-color: #00dbde;
+            --accent-color-2: #fc00ff;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-bg), var(--secondary-bg));
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+        
+        .app-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .profile-container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .profile-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: block;
+            object-fit: cover;
+            background-color: #333;
+            padding: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            color: var(--text-color);
+            font-size: 16px;
+        }
+        
+        .save-btn {
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-color-2));
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: opacity 0.3s;
+        }
+        
+        .save-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .success-message {
+            color: #4CAF50;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo-container">
+            <img src="https://i.ibb.co/ZkXFkxQ/ic-launcher-foreground.jpg" alt="Logo" class="logo">
+            <span class="app-name">SrcLeakerVip</span>
+        </div>
+    </header>
+    
+    <!-- Profile Form -->
+    <div class="profile-container">
+        <h1 class="profile-title">User Profile</h1>
+        <img src="https://i.ibb.co/4W2DHYF/user-avatar.png" alt="User Avatar" class="profile-avatar" id="userAvatar">
+        
+        <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" placeholder="Enter your full name">
+        </div>
+        
+        <div class="form-group">
+            <label for="telegramLink">Telegram Channel Link</label>
+            <input type="text" id="telegramLink" placeholder="Enter your Telegram channel link">
+        </div>
+        
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" id="age" placeholder="Enter your age">
+        </div>
+        
+        <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" placeholder="Enter your address">
+        </div>
+        
+        <button class="save-btn" id="saveBtn">Save Profile</button>
+        <div class="success-message" id="successMessage">
+            Profile saved successfully!
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnQlhPz-_ZguPmQ_A1G9tmXAenwYQ9HRk",
+            authDomain: "myweb-ee21f.firebaseapp.com",
+            databaseURL: "https://myweb-ee21f-default-rtdb.firebaseio.com",
+            projectId: "myweb-ee21f",
+            storageBucket: "myweb-ee21f.appspot.com",
+            messagingSenderId: "211270690703",
+            appId: "1:211270690703:web:bbbaf02a51fef5c6e00dfa",
+            measurementId: "G-4V4EYNGRRD"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const auth = firebase.auth();
+
+        // DOM elements
+        const saveBtn = document.getElementById('saveBtn');
+        const successMessage = document.getElementById('successMessage');
+        
+        // Generate a random avatar (👳 emoji as image)
+        document.getElementById('userAvatar').src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23333'/><text x='50' y='70' font-size='80' text-anchor='middle' dominant-baseline='middle' fill='white'>👳</text></svg>";
+
+        // Save profile data
+        saveBtn.addEventListener('click', saveProfile);
+
+        function saveProfile() {
+            const user = auth.currentUser;
+            
+            if (!user) {
+                alert("Please login to save your profile");
+                return;
+            }
+
+            const fullName = document.getElementById('fullName').value.trim();
+            const telegramLink = document.getElementById('telegramLink').value.trim();
+            const age = document.getElementById('age').value.trim();
+            const address = document.getElementById('address').value.trim();
+
+            if (!fullName) {
+                alert("Please enter your full name");
+                return;
+            }
+
+            // Create profile data object
+            const profileData = {
+                fullName: fullName,
+                telegramLink: telegramLink,
+                age: age,
+                address: address,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            };
+
+            // Save to database
+            database.ref('users/' + user.uid + '/profile').set(profileData)
+                .then(() => {
+                    successMessage.style.display = 'block';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 3000);
+                })
+                .catch(error => {
+                    console.error("Error saving profile:", error);
+                    alert("Error saving profile. Please try again.");
+                });
+        }
+
+        // Check if user is logged in and load profile data
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User is signed in, load their profile
+                database.ref('users/' + user.uid + '/profile').once('value')
+                    .then(snapshot => {
+                        const profileData = snapshot.val();
+                        if (profileData) {
+                            document.getElementById('fullName').value = profileData.fullName || '';
+                            document.getElementById('telegramLink').value = profileData.telegramLink || '';
+                            document.getElementById('age').value = profileData.age || '';
+                            document.getElementById('address').value = profileData.address || '';
+                        }
+                    });
+            } else {
+                // No user is signed in
+                alert("Please login to view or edit your profile");
+                window.location.href = 'index.html'; // Redirect to login page
+            }
+        });
+    </script>
+</body>
+</html>
