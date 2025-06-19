@@ -625,15 +625,29 @@
             chatBody.scrollTop = chatBody.scrollHeight;
         }
         
-        // Function to trigger file download
-        function downloadFile(url, fileName) {
-            // Create a temporary anchor element
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = fileName || 'download';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+        // Function to force download
+        function forceDownload(url, fileName) {
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/octet-stream',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(new Blob([blob]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', fileName);
+                document.body.appendChild(link);
+                link.click();
+                link.parentNode.removeChild(link);
+            })
+            .catch(error => {
+                console.error('Error downloading file:', error);
+                // Fallback to opening in new tab if download fails
+                window.open(url, '_blank');
+            });
         }
         
         // Load Bypass Tools from Firebase
@@ -662,37 +676,24 @@
                                     </div>
                                 </div>
                                 <div class="product-price">Version: ${tool.version || '1.0'}</div>
-                                <button class="buy-btn" data-url="${tool.downloadUrl || '#'}" data-filename="${tool.name.replace(/\s+/g, '-')}-v${tool.version || '1.0'}.zip">
+                                <button class="buy-btn" data-url="${tool.downloadUrl || '#'}" 
+                                    data-filename="${tool.name.replace(/\s+/g, '_')}_v${tool.version || '1.0'}.zip">
                                     Download
                                 </button>
                             </div>
                         `;
                         productsGrid.appendChild(toolCard);
                     });
-                    
+
                     // Add event listeners to all download buttons
                     document.querySelectorAll('.buy-btn').forEach(button => {
-                        button.addEventListener('click', function() {
-                            const fileUrl = this.getAttribute('data-url');
-                            const fileName = this.getAttribute('data-filename');
-                            
-                            // Show loading state
-                            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
-                            
-                            // Create a hidden iframe to trigger the download
-                            const iframe = document.createElement('iframe');
-                            iframe.style.display = 'none';
-                            iframe.src = fileUrl;
-                            document.body.appendChild(iframe);
-                            
-                            // Reset button after a short delay
-                            setTimeout(() => {
-                                this.innerHTML = 'Download';
-                                document.body.removeChild(iframe);
-                            }, 3000);
-                            
-                            // Alternatively, use the downloadFile function
-                            // downloadFile(fileUrl, fileName);
+                        button.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const url = button.getAttribute('data-url');
+                            const filename = button.getAttribute('data-filename');
+                            if (url && url !== '#') {
+                                forceDownload(url, filename);
+                            }
                         });
                     });
                 } else {
