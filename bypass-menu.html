@@ -523,7 +523,8 @@
         const productsGrid = document.getElementById('productsGrid');
         
         // Navigation elements
-        const homePage = document.getElementById('homePage');
+        const userProfile = document.getElementById('userProfile');
+        const paymentPage = document.getElementById('paymentPage');
         const bypassMenu = document.getElementById('bypassMenu');
         const modApk = document.getElementById('modApk');
         const sourceCode = document.getElementById('sourceCode');
@@ -625,29 +626,72 @@
             chatBody.scrollTop = chatBody.scrollHeight;
         }
         
-        // Function to force download
-        function forceDownload(url, fileName) {
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/octet-stream',
-                },
-            })
-            .then(response => response.blob())
-            .then(blob => {
-                const url = window.URL.createObjectURL(new Blob([blob]));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', fileName);
-                document.body.appendChild(link);
-                link.click();
-                link.parentNode.removeChild(link);
-            })
-            .catch(error => {
-                console.error('Error downloading file:', error);
-                // Fallback to opening in new tab if download fails
+        // Enhanced Download Function
+        async function downloadFile(url, filename) {
+            try {
+                // Show loading state
+                const buttons = document.querySelectorAll('.buy-btn');
+                buttons.forEach(btn => {
+                    if (btn.getAttribute('data-url') === url) {
+                        const originalText = btn.innerHTML;
+                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
+                        btn.disabled = true;
+                        
+                        // Revert button after 5 seconds if download fails
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                            btn.disabled = false;
+                        }, 5000);
+                    }
+                });
+                
+                // Create hidden iframe for download
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = url;
+                document.body.appendChild(iframe);
+                
+                // Fallback method using fetch
+                const fallbackDownload = async () => {
+                    try {
+                        const response = await fetch(url);
+                        const blob = await response.blob();
+                        const blobUrl = window.URL.createObjectURL(blob);
+                        
+                        const a = document.createElement('a');
+                        a.href = blobUrl;
+                        a.download = filename || 'download';
+                        document.body.appendChild(a);
+                        a.click();
+                        
+                        // Cleanup
+                        window.URL.revokeObjectURL(blobUrl);
+                        document.body.removeChild(a);
+                    } catch (error) {
+                        console.error('Fallback download failed:', error);
+                        // Final fallback - open in new tab
+                        window.open(url, '_blank');
+                    }
+                };
+                
+                // Set timeout for iframe method
+                setTimeout(() => {
+                    if (!iframe.contentDocument || !iframe.contentDocument.location.href) {
+                        fallbackDownload();
+                    }
+                }, 2000);
+                
+                // Cleanup iframe after download
+                iframe.onload = () => {
+                    setTimeout(() => {
+                        document.body.removeChild(iframe);
+                    }, 1000);
+                };
+                
+            } catch (error) {
+                console.error('Download error:', error);
                 window.open(url, '_blank');
-            });
+            }
         }
         
         // Load Bypass Tools from Firebase
@@ -676,7 +720,8 @@
                                     </div>
                                 </div>
                                 <div class="product-price">Version: ${tool.version || '1.0'}</div>
-                                <button class="buy-btn" data-url="${tool.downloadUrl || '#'}" 
+                                <button class="buy-btn" 
+                                    data-url="${tool.downloadUrl || '#'}" 
                                     data-filename="${tool.name.replace(/\s+/g, '_')}_v${tool.version || '1.0'}.zip">
                                     Download
                                 </button>
@@ -692,7 +737,7 @@
                             const url = button.getAttribute('data-url');
                             const filename = button.getAttribute('data-filename');
                             if (url && url !== '#') {
-                                forceDownload(url, filename);
+                                downloadFile(url, filename);
                             }
                         });
                     });
@@ -757,40 +802,6 @@
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
         });
-
-        // Additional Bypass Functions
-        function checkBypassCompatibility() {
-            // Function to check compatibility with different game versions
-            console.log("Checking bypass compatibility...");
-        }
-
-        function getLatestBypassVersion() {
-            // Function to get latest bypass version
-            console.log("Fetching latest bypass version...");
-            return "2.4.1";
-        }
-
-        function validateBypassSignature() {
-            // Function to validate bypass signature
-            console.log("Validating bypass signature...");
-            return true;
-        }
-
-        function checkRootStatus() {
-            // Function to check root status
-            console.log("Checking root status...");
-            return false;
-        }
-
-        function bypassMemoryChecks() {
-            // Function to bypass memory checks
-            console.log("Bypassing memory checks...");
-        }
-
-        function disableAntiCheat() {
-            // Function to disable anti-cheat temporarily
-            console.log("Disabling anti-cheat systems...");
-        }
     </script>
 </body>
 </html>
