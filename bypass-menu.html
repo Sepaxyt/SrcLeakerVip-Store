@@ -401,10 +401,10 @@
             <li id="userProfile">
                 <i class="fas fa-user-circle"></i> User Profile
             </li>
-            <li id="homePage">
-                <i class="fas fa-home"></i> Home Page
+            <li id="paymentPage">
+                <i class="fas fa-money-bill-wave"></i> Payment
             </li>
-            <li id="bypassMenu" class="active">
+            <li id="bypassMenu">
                 <i class="fas fa-unlock-alt"></i> Bypass Menu
             </li>
             <li id="modApk">
@@ -625,6 +625,17 @@
             chatBody.scrollTop = chatBody.scrollHeight;
         }
         
+        // Function to trigger file download
+        function downloadFile(url, fileName) {
+            // Create a temporary anchor element
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName || 'download';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+        
         // Load Bypass Tools from Firebase
         function loadBypassTools() {
             const bypassRef = ref(database, 'bypass_tools');
@@ -651,12 +662,38 @@
                                     </div>
                                 </div>
                                 <div class="product-price">Version: ${tool.version || '1.0'}</div>
-                                <a href="${tool.downloadUrl || '#'}" class="buy-btn" target="_blank">
+                                <button class="buy-btn" data-url="${tool.downloadUrl || '#'}" data-filename="${tool.name.replace(/\s+/g, '-')}-v${tool.version || '1.0'}.zip">
                                     Download
-                                </a>
+                                </button>
                             </div>
                         `;
                         productsGrid.appendChild(toolCard);
+                    });
+                    
+                    // Add event listeners to all download buttons
+                    document.querySelectorAll('.buy-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const fileUrl = this.getAttribute('data-url');
+                            const fileName = this.getAttribute('data-filename');
+                            
+                            // Show loading state
+                            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
+                            
+                            // Create a hidden iframe to trigger the download
+                            const iframe = document.createElement('iframe');
+                            iframe.style.display = 'none';
+                            iframe.src = fileUrl;
+                            document.body.appendChild(iframe);
+                            
+                            // Reset button after a short delay
+                            setTimeout(() => {
+                                this.innerHTML = 'Download';
+                                document.body.removeChild(iframe);
+                            }, 3000);
+                            
+                            // Alternatively, use the downloadFile function
+                            // downloadFile(fileUrl, fileName);
+                        });
                     });
                 } else {
                     productsGrid.innerHTML = '<p class="error-message">No bypass tools available. Check back later!</p>';
@@ -671,8 +708,8 @@
         loadBypassTools();
         
         // Navigation handlers
-        homePage.addEventListener('click', () => {
-            window.location.href = 'index.html';
+        paymentPage.addEventListener('click', () => {
+            window.location.href = 'payment.html';
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
         });
@@ -707,13 +744,13 @@
             overlay.classList.remove('active');
         });
         
-        // Sidebar menu items functionality
-        document.getElementById('userProfile').addEventListener('click', () => {
-            alert('User profile will be implemented in the next version');
+        userProfile.addEventListener('click', () => {
+            window.location.href = 'userprofile.html';
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
         });
         
+        // Sidebar menu items functionality
         document.getElementById('telegramChannel').addEventListener('click', () => {
             window.open('https://t.me/SrcLeakerVip', '_blank');
             sidebar.classList.remove('open');
