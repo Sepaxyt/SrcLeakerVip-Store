@@ -205,6 +205,11 @@
             display: block;
         }
         
+        .buy-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
         .live-chat-btn {
             position: fixed;
             bottom: 20px;
@@ -493,7 +498,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-database.js";
         
-        // Your Firebase configuration
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCnQlhPz-_ZguPmQ_A1G9tmXAenwYQ9HRk",
             authDomain: "myweb-ee21f.firebaseapp.com",
@@ -627,62 +632,62 @@
         }
         
         // Enhanced Download Function
-        async function downloadFile(url, filename) {
+        async function downloadFile(url, filename, button) {
             try {
                 // Show loading state
-                const buttons = document.querySelectorAll('.buy-btn');
-                buttons.forEach(btn => {
-                    if (btn.getAttribute('data-url') === url) {
-                        const originalText = btn.innerHTML;
-                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
-                        btn.disabled = true;
-                        
-                        // Revert button after 5 seconds if download fails
-                        setTimeout(() => {
-                            btn.innerHTML = originalText;
-                            btn.disabled = false;
-                        }, 5000);
-                    }
-                });
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
+                button.disabled = true;
                 
-                // Create hidden iframe for download
+                // Method 1: Create hidden iframe
                 const iframe = document.createElement('iframe');
                 iframe.style.display = 'none';
                 iframe.src = url;
                 document.body.appendChild(iframe);
                 
-                // Fallback method using fetch
-                const fallbackDownload = async () => {
-                    try {
-                        const response = await fetch(url);
-                        const blob = await response.blob();
-                        const blobUrl = window.URL.createObjectURL(blob);
-                        
-                        const a = document.createElement('a');
-                        a.href = blobUrl;
-                        a.download = filename || 'download';
-                        document.body.appendChild(a);
-                        a.click();
-                        
-                        // Cleanup
-                        window.URL.revokeObjectURL(blobUrl);
-                        document.body.removeChild(a);
-                    } catch (error) {
-                        console.error('Fallback download failed:', error);
-                        // Final fallback - open in new tab
-                        window.open(url, '_blank');
-                    }
-                };
-                
-                // Set timeout for iframe method
-                setTimeout(() => {
-                    if (!iframe.contentDocument || !iframe.contentDocument.location.href) {
-                        fallbackDownload();
+                // Set timeout to check if download started
+                let downloadStarted = false;
+                const downloadTimeout = setTimeout(() => {
+                    if (!downloadStarted) {
+                        // Method 2: Fetch API fallback
+                        fetch(url)
+                            .then(response => response.blob())
+                            .then(blob => {
+                                const blobUrl = window.URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = blobUrl;
+                                a.download = filename || 'download';
+                                document.body.appendChild(a);
+                                a.click();
+                                
+                                // Cleanup
+                                setTimeout(() => {
+                                    window.URL.revokeObjectURL(blobUrl);
+                                    document.body.removeChild(a);
+                                    document.body.removeChild(iframe);
+                                }, 100);
+                            })
+                            .catch(error => {
+                                console.error('Fetch download failed:', error);
+                                // Method 3: Final fallback - create temporary link
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = filename || 'download';
+                                a.style.display = 'none';
+                                document.body.appendChild(a);
+                                a.click();
+                                setTimeout(() => {
+                                    document.body.removeChild(a);
+                                    document.body.removeChild(iframe);
+                                }, 100);
+                            });
                     }
                 }, 2000);
                 
-                // Cleanup iframe after download
+                // Check if download completed
                 iframe.onload = () => {
+                    downloadStarted = true;
+                    clearTimeout(downloadTimeout);
                     setTimeout(() => {
                         document.body.removeChild(iframe);
                     }, 1000);
@@ -690,7 +695,14 @@
                 
             } catch (error) {
                 console.error('Download error:', error);
+                // Ultimate fallback - open in new tab
                 window.open(url, '_blank');
+            } finally {
+                // Restore button after 3 seconds
+                setTimeout(() => {
+                    button.innerHTML = 'Download';
+                    button.disabled = false;
+                }, 3000);
             }
         }
         
@@ -737,7 +749,7 @@
                             const url = button.getAttribute('data-url');
                             const filename = button.getAttribute('data-filename');
                             if (url && url !== '#') {
-                                downloadFile(url, filename);
+                                downloadFile(url, filename, button);
                             }
                         });
                     });
